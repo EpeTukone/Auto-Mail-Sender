@@ -131,4 +131,4 @@ if __name__ == "__main__":
         error_message.append('\n'.join(mail_data_error))
         auto_mail_sender(error_message)
     wb = None
-    print('objects count{}'.format(col_row))
+    print('objects count{}'.format(objects))
