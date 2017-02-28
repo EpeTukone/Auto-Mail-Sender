@@ -12,6 +12,9 @@ from openpyxl import load_workbook
 mail_data = []
 mail_data_error = []
 error_message = [0]
+col_row = 0
+objects = 0
+
 ws = None
 wb = None
 
@@ -46,8 +49,9 @@ def data_proccesing(mail_data):
 
 def auto_mail_sender(data):
 
-    toaddr = 'www.heretic@inbox.ru'
+    #toaddr = 'www.heretic@inbox.ru'
     #toaddr = 'dispetcher@bcservice.by'
+    toaddr = 'otrs@bcservice.by'
     #toaddr = 'info@bcservice.by'
     me = 'allphone@bcservice.by'
 #    you = toaddr
@@ -61,8 +65,8 @@ def auto_mail_sender(data):
 
     #message_subject = None
     if data[0] == 1:
-        message_subject = ('То - {}, {}'.format(data[2], data[3]))
-        message_text = ('Ответственный за ТО: ' + data[4]+'\n' + 'То - ' + data[2] + ',   ' + data[3] + '\n' +
+        message_subject = ('ТО - {}, {}'.format(data[2], data[3]))
+        message_text = ('Ответственный за ТО: ' + data[4]+'\n' + 'ТО - ' + data[2] + ',   ' + data[3] + '\n' +
                     'кассы: ' + data[5] + '    весы: ' + data[6])
 
     if data[0] == 0:
@@ -101,7 +105,7 @@ if __name__ == "__main__":
     #wb = load_workbook(filename='test.xlsx')
     wb = load_workbook(filename='Статистика по объектам ТО.xlsx')
     temp_list = wb.get_sheet_names()
-    temp_list = temp_list[3:(len(temp_list)-1)]
+    temp_list = temp_list[:(len(temp_list)-4)]
     print('City in work book: '+(' '.join(temp_list)))
     # Обработка страниц из xlsx
     for city in temp_list:
@@ -120,9 +124,11 @@ if __name__ == "__main__":
             mail_data = []
             time.sleep(2)
         print('objects count in {}:{}'.format(wb[city], col_row))
+        objects += col_row
         ws = None
     # Если обнаруженны ошибочные строки отправляем письмо
     if len(mail_data_error) > 0:
         error_message.append('\n'.join(mail_data_error))
         auto_mail_sender(error_message)
     wb = None
+    print('objects count{}'.format(col_row))
